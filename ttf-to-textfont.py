@@ -91,8 +91,6 @@ def main(prog, argv):
 
 
     help = prog + '[-p <point-size>] [-g <glyphs>] <fontfile>'
-    inputfile = ''
-    outputfile = ''
     try:
       opts, args = getopt.getopt(argv,"hg:p:")
     except getopt.GetoptError:
