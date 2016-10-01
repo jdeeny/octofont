@@ -90,7 +90,7 @@ def main(prog, argv):
 
 
 
-    help = prog + ' [-g <glyphs>] <fontfile>'
+    help = prog + '[-p <point-size>] [-g <glyphs>] <fontfile>'
     inputfile = ''
     outputfile = ''
     try:
