@@ -1,3 +1,4 @@
+import sys, getopt
 import string
 from PIL import ImageFont, ImageDraw
 from itertools import chain
@@ -25,7 +26,7 @@ def find_max_width(font, glyphs):
 
 
 
-def print_character(font, glyph, max_height):
+def print_character(font, glyph, max_height, alignments):
     bitmap = font.getmask(glyph, "1")
     bbox = bitmap.getbbox()
     comment = "# " + glyph + " (ASCII: " + str(ord(glyph)) + ")"
@@ -41,11 +42,11 @@ def print_character(font, glyph, max_height):
     post = 0
 
     extra = max_height - (y2-y1)
-    if glyph in vert_center:
+    if glyph in alignments["center"]:
         comment += " (centered)"
         post = extra / 2
         pre = extra - post
-    elif glyph in vert_top:
+    if glyph in alignments["top"]:
         comment += " (align-top)"
         post = extra
         # Move one pixel down from the top if the glyph is really short
@@ -77,24 +78,59 @@ def print_character(font, glyph, max_height):
     print
 
 
-vert_center = "~=%!#$()*+/<>@[]\{\}|"
-vert_top = "^\"\'`"
-
-font_file = "Small_5x3/small_5x3.ttf"
-font_points = 8
-font_glyphs = string.printable
-exclude = set(chr(i) for i in chain(range(0, 31), range(128, 255)))
-font_glyphs = ''.join(ch for ch in font_glyphs if ch not in exclude)
-
-font = ImageFont.truetype(font_file, font_points)
-
-max_height = find_max_height(font, font_glyphs)
-max_width = find_max_height(font, font_glyphs)
 
 
-print "# " + font_file + ", " + str(font_points) + " points, height " + str(max_height) + " px, widest " + str(max_width) + " px"
-print "# Exporting: " + font_glyphs
-print
 
-for glyph in font_glyphs:
-    print_character(font, glyph, max_height)
+def main(prog, argv):
+    vert_center = "~=%!#$()*+/<>@[]\{\}|"
+    vert_top = "^\"\'`"
+
+    font_points = 8
+    font_glyphs = string.printable
+
+
+
+    help = prog + ' [-g <glyphs>] <fontfile>'
+    inputfile = ''
+    outputfile = ''
+    try:
+      opts, args = getopt.getopt(argv,"hg:p:")
+    except getopt.GetoptError:
+      print help
+      sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print help
+            sys.exit()
+        elif opt == '-g':
+            font_glyphs = arg
+        elif opt == '-p':
+            font_points = int(arg)
+    if len(args) != 1:
+        print help
+        sys.exit(2)
+
+    font_file = args[0]
+
+    # Remove unprintable characters
+    exclude = set(chr(i) for i in chain(range(0, 31), range(128, 255)))
+    font_glyphs = ''.join(ch for ch in font_glyphs if ch not in exclude)
+
+    alignments = { "top": vert_top, "center": vert_center }
+
+    font = ImageFont.truetype(font_file, font_points)
+
+    max_height = find_max_height(font, font_glyphs)
+    max_width = find_max_height(font, font_glyphs)
+
+
+    print "# " + font_file + ", " + str(font_points) + " points, height " + str(max_height) + " px, widest " + str(max_width) + " px"
+    print "# Exporting: " + font_glyphs
+    print
+
+    for glyph in font_glyphs:
+        print_character(font, glyph, max_height, alignments)
+
+
+if __name__ == "__main__":
+   main(sys.argv[0], sys.argv[1:])
