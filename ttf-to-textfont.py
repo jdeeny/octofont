@@ -46,7 +46,7 @@ def print_character(font, glyph, max_height, alignments):
         comment += " (centered)"
         post = extra / 2
         pre = extra - post
-    if glyph in alignments["top"]:
+    elif glyph in alignments["top"]:
         comment += " (align-top)"
         post = extra
         # Move one pixel down from the top if the glyph is really short
