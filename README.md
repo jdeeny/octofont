@@ -19,3 +19,4 @@ Many improvements could be made:
  - Advanced kerning rules
  - Optional guards for out-of-bounds inputs
  - Better handling of vertical alignment and the font baseline. Clipping the glyphs with a bounding box is not helping with this.
+ - Use of register aliases
