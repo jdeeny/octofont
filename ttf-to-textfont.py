@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys, getopt
 import string
 from PIL import ImageFont, ImageDraw
@@ -59,7 +60,7 @@ def print_character(font, glyph, max_height, alignments):
 
     #print comment
 
-    print str(ord(glyph)) + " " + str(x2-x1) + " " + comment
+    print "GLYPH: " + str(ord(glyph)) + " " + str(x2-x1) + " " + str(max_height) + "   " + comment
 
     for i in range(pre):
         print "." * (x2-x1)
@@ -75,10 +76,6 @@ def print_character(font, glyph, max_height, alignments):
     for i in range(post):
         print "." * (x2-x1)
 
-    print
-
-
-
 
 
 def main(prog, argv):
@@ -90,9 +87,9 @@ def main(prog, argv):
 
 
 
-    help = prog + '[-p <point-size>] [-g <glyphs>] <fontfile>'
+    help = prog + '[-p <point-size>] [-g <glyphs-to-extract>] [-c <glyphs-to-center>] [-t <glyphs-to-align-top>] <fontfile>'
     try:
-      opts, args = getopt.getopt(argv,"hg:p:")
+      opts, args = getopt.getopt(argv,"hg:p:c:t:")
     except getopt.GetoptError:
       print help
       sys.exit(2)
@@ -104,6 +101,10 @@ def main(prog, argv):
             font_glyphs = arg
         elif opt == '-p':
             font_points = int(arg)
+        elif opt == '-c':
+            vert_center = arg
+        elif opt == '-t':
+            vert_top = arg
     if len(args) != 1:
         print help
         sys.exit(2)
@@ -124,7 +125,7 @@ def main(prog, argv):
 
     print "# " + font_file + ", " + str(font_points) + " points, height " + str(max_height) + " px, widest " + str(max_width) + " px"
     print "# Exporting: " + font_glyphs
-    print
+    print "FONT: " + str(max_width) + " " + str(max_height)
 
     for glyph in font_glyphs:
         print_character(font, glyph, max_height, alignments)
