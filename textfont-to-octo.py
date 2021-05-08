@@ -6,13 +6,12 @@ from math import log
 
 
 def main(prog, argv):
-
     help = prog + ' <textfont-file>'
     try:
-      opts, args = getopt.getopt(argv, "h")
+        opts, args = getopt.getopt(argv, "h")
     except getopt.GetoptError:
-      print(help)
-      sys.exit(2)
+        print(help)
+        sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
             print(help)
